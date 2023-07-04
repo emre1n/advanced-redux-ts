@@ -1,11 +1,11 @@
-export interface UIState {
+export interface uiState {
   cartIsVisible: boolean;
 }
 
 export interface CartState {
   items: {
     id: string;
-    name: string;
+    title: string;
     price: number;
     quantity: number;
     totalPrice: number;
@@ -14,5 +14,6 @@ export interface CartState {
 }
 
 export interface RootState {
-  ui: UIState;
+  ui: uiState;
+  cart: CartState;
 }

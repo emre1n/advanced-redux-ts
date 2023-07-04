@@ -2,7 +2,7 @@ import styles from './styles.module.css';
 
 interface CardProps {
   className?: string;
-  children: JSX.Element;
+  children: React.ReactNode;
 }
 
 const Card = ({ children, className }: CardProps) => {

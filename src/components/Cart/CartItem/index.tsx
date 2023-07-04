@@ -1,11 +1,28 @@
-import styles from './styles.module.css';
+import { useDispatch } from 'react-redux';
 
+import styles from './styles.module.css';
+import { cartActions } from '../../../store/slices/cart.store';
 interface CartItemProps {
-  item: { title: string; quantity: number; total: number; price: number };
+  item: {
+    id: string;
+    title: string;
+    quantity: number;
+    total: number;
+    price: number;
+  };
 }
 
 const CartItem = ({ item }: CartItemProps) => {
-  const { title, quantity, total, price } = item;
+  const dispatch = useDispatch();
+
+  const { title, quantity, total, price, id } = item;
+
+  const handleRemoveItem = () => {
+    dispatch(cartActions.removeItemFromCart(id));
+  };
+  const handleAddItem = () => {
+    dispatch(cartActions.addItemToCart({ id, title, price }));
+  };
 
   return (
     <li className={styles.item}>
@@ -21,8 +38,8 @@ const CartItem = ({ item }: CartItemProps) => {
           x <span>{quantity}</span>
         </div>
         <div className={styles.actions}>
-          <button>-</button>
-          <button>+</button>
+          <button onClick={handleRemoveItem}>-</button>
+          <button onClick={handleAddItem}>+</button>
         </div>
       </div>
     </li>
