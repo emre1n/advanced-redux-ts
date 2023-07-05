@@ -1,5 +1,6 @@
 export interface uiState {
   cartIsVisible: boolean;
+  notification: { status: string; title: string; message: string } | null;
 }
 
 export interface CartState {
