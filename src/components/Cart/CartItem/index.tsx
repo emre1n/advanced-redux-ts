@@ -1,7 +1,11 @@
-import { useDispatch } from 'react-redux';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../hooks/useTypedSelector';
 
 import styles from './styles.module.css';
 import { cartActions } from '../../../store/slices/cart.store';
+import { sendCartData } from '../../../store/slices/cart.store/actions';
 interface CartItemProps {
   item: {
     id: string;
@@ -13,15 +17,17 @@ interface CartItemProps {
 }
 
 const CartItem = ({ item }: CartItemProps) => {
-  const dispatch = useDispatch();
-
+  const dispatch = useAppDispatch();
+  const cart = useAppSelector(state => state.cart);
   const { title, quantity, total, price, id } = item;
 
   const handleRemoveItem = () => {
     dispatch(cartActions.removeItemFromCart(id));
   };
-  const handleAddItem = () => {
+  const handleAddItem = async () => {
     dispatch(cartActions.addItemToCart({ id, title, price }));
+    const { loading, error, ...others } = cart;
+    await dispatch(sendCartData(others));
   };
 
   return (

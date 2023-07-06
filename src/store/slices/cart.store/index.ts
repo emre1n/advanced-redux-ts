@@ -1,12 +1,26 @@
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { CartState } from '../../../libs/types';
 
-const initialState: CartState = { items: [], totalQuantity: 0 };
+import { fetchCartData, sendCartData } from './actions';
+
+const initialState: CartState = {
+  items: [],
+  totalQuantity: 0,
+  loading: false,
+  error: false,
+};
 
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
+    replaceCart: (state, action) => {
+      state.totalQuantity = action.payload.totalQuantity;
+      state.items = action.payload.items;
+      // state.error = action.payload.error;
+      // state.loading = action.payload.error;
+    },
+
     addItemToCart: (
       state,
       action: PayloadAction<{ id: string; title: string; price: number }>
@@ -44,33 +58,47 @@ const cartSlice = createSlice({
     },
   },
   extraReducers: builder => {
+    // UPDATING DATA ON THE BACKEND SERVER
+    builder.addCase(sendCartData.pending, state => {
+      state.loading = true;
+      console.log('Pending!');
+    });
     builder.addCase(
       sendCartData.fulfilled,
       (state, action: PayloadAction<CartState>) => {
-        state = action.payload;
+        state.totalQuantity = action.payload.totalQuantity;
+        state.items = action.payload.items;
+        state.loading = false;
+        state.error = false;
       }
     );
+    builder.addCase(sendCartData.rejected, (state, action) => {
+      state.loading = false;
+      state.error = true;
+      // throw new Error('Sending cart data failed!(extraReducer)');
+    });
+    // FETCHING DATA FROM BACKEND SERVER
+    builder.addCase(fetchCartData.pending, state => {
+      state.loading = true;
+      console.log('Pending!');
+    });
+    builder.addCase(
+      fetchCartData.fulfilled,
+      (state, action: PayloadAction<CartState>) => {
+        // state.items = action.payload.items;
+        state.items = action.payload.items;
+        state.totalQuantity = action.payload.totalQuantity;
+        state.loading = false;
+        state.error = false;
+      }
+    );
+    builder.addCase(fetchCartData.rejected, (state, action) => {
+      state.loading = false;
+      state.error = true;
+      // throw new Error('Fetching cart data failed!(extraReducer)');
+    });
   },
 });
-
-export const sendCartData = createAsyncThunk(
-  'cart/fetch',
-  async (cart: CartState, thunkAPI) => {
-    try {
-      const response = await fetch('http://localhost:5000/cart/', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(cart),
-      });
-      const data = await response.json();
-      return data;
-    } catch (error: unknown) {
-      return thunkAPI.rejectWithValue('Sending cart data failed.');
-    }
-  }
-);
 
 export const cartActions = cartSlice.actions;
 

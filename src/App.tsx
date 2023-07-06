@@ -10,38 +10,42 @@ import { RootState } from './libs/types';
 
 import Notification from './components/UI/Notification';
 import { useAppDispatch, useAppSelector } from './hooks/useTypedSelector';
-import { sendCartData } from './store/slices/cart.store';
+import { cartActions } from './store/slices/cart.store';
+import { fetchCartData } from './store/slices/cart.store/actions';
 
-let isInitial = true;
+// let isInitial = true;
 
 function App() {
   const dispatch = useAppDispatch();
   const showCart = useSelector((state: RootState) => state.ui.cartIsVisible);
   // const cart = useSelector((state: RootState) => state.cart);
   const cart = useAppSelector(state => state.cart);
+
   const notification = useSelector((state: RootState) => state.ui.notification);
 
   useEffect(() => {
-    if (isInitial) {
-      isInitial = false;
-      return;
-    }
-    dispatch(sendCartData(cart));
-  }, [cart, dispatch]);
+    const getDataFromDB = async () => {
+      const data = await dispatch(fetchCartData());
+      console.log('useEffectData', data.payload);
+      return data.payload;
+    };
+    const dataFromDB = getDataFromDB();
+    dispatch(cartActions.replaceCart(dataFromDB));
+  }, [dispatch]);
 
   // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const response = await fetch('http://localhost:5000/cart/', {
-  //       method: 'GET',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     });
-  //     const data = await response.json();
-  //     console.log('response', data);
+  //   if (isInitial) {
+  //     isInitial = false;
+  //     return;
+  //   }
+  //   const dispatchData = async () => {
+  //     await dispatch(sendCartData(cart));
   //   };
-  //   fetchData();
-  // }, [cart]);
+  //   dispatchData();
+  // }, [cart, dispatch]);
+
+  console.log('cart', cart);
+  console.log('notification', notification);
 
   return (
     <>

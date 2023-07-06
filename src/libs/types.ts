@@ -14,6 +14,19 @@ export interface CartState {
     totalPrice: number;
   }[];
   totalQuantity: number;
+  loading: boolean;
+  error: boolean;
+}
+
+export interface CartDBState {
+  items: {
+    id: string;
+    title: string;
+    price: number;
+    quantity: number;
+    totalPrice: number;
+  }[];
+  totalQuantity: number;
 }
 
 export interface RootState {
