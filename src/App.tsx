@@ -31,14 +31,33 @@ function App() {
 
   useEffect(() => {
     const initialDispatch = async () => {
-      await dispatch(fetchCartData());
+      dispatch(
+        uiActions.showNotification({
+          status: 'pending',
+          title: 'Loading...',
+          message: 'Connecting to server!',
+        })
+      );
+
+      try {
+        await dispatch(fetchCartData());
+        dispatch(
+          uiActions.showNotification({
+            status: 'success',
+            title: 'Success!',
+            message: 'Cart data received successfully!',
+          })
+        );
+      } catch (error) {
+        throw new Error('Cannot fetch!');
+      }
     };
 
     initialDispatch();
 
     // Return a cleanup function that does nothing
     return () => {
-      // this function is intentionally left empty.
+      // This function intentionally left empty
     };
   }, [dispatch]);
 
@@ -46,8 +65,33 @@ function App() {
 
   useEffect(() => {
     if (cartUpdated) {
-      dispatch(sendCartData(cart));
-      dispatch(uiActions.setCartUpdated(false));
+      dispatch(
+        uiActions.showNotification({
+          status: 'pending',
+          title: 'Loading...',
+          message: 'Connecting to server!',
+        })
+      );
+
+      try {
+        dispatch(sendCartData(cart));
+        dispatch(uiActions.setCartUpdated(false));
+        dispatch(
+          uiActions.showNotification({
+            status: 'success',
+            title: 'Success!',
+            message: 'Sent cart data successfully!',
+          })
+        );
+      } catch (error) {
+        dispatch(
+          uiActions.showNotification({
+            status: 'error',
+            title: 'Error!',
+            message: 'Sending cart data failed!',
+          })
+        );
+      }
     }
   }, [cart, cartUpdated, dispatch]);
 

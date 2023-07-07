@@ -21,7 +21,7 @@ export const sendCartData = createAsyncThunk(
   'cart/sendToBackend',
   async (cart: CartState, thunkAPI) => {
     try {
-      const response = await fetch('http://localhost:5000/car/', {
+      const response = await fetch('http://localhost:5000/cart/', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

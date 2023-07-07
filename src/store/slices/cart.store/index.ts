@@ -63,7 +63,6 @@ const cartSlice = createSlice({
     builder.addCase(fetchCartData.pending, state => {
       state.loading = true;
       state.error = false;
-      console.log('Pending!');
     });
     builder.addCase(
       fetchCartData.fulfilled,
@@ -85,7 +84,6 @@ const cartSlice = createSlice({
     builder.addCase(sendCartData.pending, state => {
       state.loading = true;
       state.error = false;
-      console.log('Pending!');
     });
     builder.addCase(sendCartData.fulfilled, state => {
       // state.items = action.payload.items;
