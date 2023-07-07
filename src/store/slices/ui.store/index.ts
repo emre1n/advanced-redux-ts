@@ -1,7 +1,11 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { uiState } from '../../../libs/types';
 
-const initialState: uiState = { cartIsVisible: false, notification: null };
+const initialState: uiState = {
+  cartIsVisible: false,
+  notification: null,
+  isCartUpdated: false,
+};
 
 const uiSlice = createSlice({
   name: 'ui',
@@ -19,6 +23,9 @@ const uiSlice = createSlice({
         title: action.payload.title,
         message: action.payload.message,
       };
+    },
+    setCartUpdated: (state, action: PayloadAction<boolean>) => {
+      state.isCartUpdated = action.payload;
     },
   },
 });

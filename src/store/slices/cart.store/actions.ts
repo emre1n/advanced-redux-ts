@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { CartDBState, CartState } from '../../../libs/types';
+import { CartState } from '../../../libs/types';
 
 export const fetchCartData = createAsyncThunk('cart/fetch', async () => {
   const response = await fetch('http://localhost:5000/cart/', {
@@ -10,13 +10,13 @@ export const fetchCartData = createAsyncThunk('cart/fetch', async () => {
     },
   });
   const data = await response.json();
-  console.log('thunk', data);
+  console.log('<<<data from BE via thunk', data);
   return data;
 });
 
 export const sendCartData = createAsyncThunk(
   'cart/send',
-  async (cart: CartDBState, thunkAPI) => {
+  async (cart: CartState, thunkAPI) => {
     try {
       const response = await fetch('http://localhost:5000/cart/', {
         method: 'PATCH',
@@ -26,6 +26,7 @@ export const sendCartData = createAsyncThunk(
         body: JSON.stringify(cart),
       });
       const data = await response.json();
+      console.log('>>>data to BE via thunk', data);
       return data;
     } catch (error: unknown) {
       return thunkAPI.rejectWithValue(

@@ -6,8 +6,6 @@ import { fetchCartData, sendCartData } from './actions';
 const initialState: CartState = {
   items: [],
   totalQuantity: 0,
-  loading: false,
-  error: false,
 };
 
 const cartSlice = createSlice({
@@ -59,44 +57,44 @@ const cartSlice = createSlice({
   },
   extraReducers: builder => {
     // UPDATING DATA ON THE BACKEND SERVER
-    builder.addCase(sendCartData.pending, state => {
-      state.loading = true;
-      console.log('Pending!');
-    });
+    // builder.addCase(sendCartData.pending, state => {
+    // state.loading = true;
+    // console.log('Pending!');
+    // });
     builder.addCase(
       sendCartData.fulfilled,
       (state, action: PayloadAction<CartState>) => {
         state.totalQuantity = action.payload.totalQuantity;
         state.items = action.payload.items;
-        state.loading = false;
-        state.error = false;
+        // state.loading = false;
+        // state.error = false;
       }
     );
-    builder.addCase(sendCartData.rejected, (state, action) => {
-      state.loading = false;
-      state.error = true;
-      // throw new Error('Sending cart data failed!(extraReducer)');
-    });
+    // builder.addCase(sendCartData.rejected, (state, action) => {
+    // state.loading = false;
+    // state.error = true;
+    // throw new Error('Sending cart data failed!(extraReducer)');
+    // });
     // FETCHING DATA FROM BACKEND SERVER
-    builder.addCase(fetchCartData.pending, state => {
-      state.loading = true;
-      console.log('Pending!');
-    });
+    // builder.addCase(fetchCartData.pending, state => {
+    //   state.loading = true;
+    //   console.log('Pending!');
+    // });
     builder.addCase(
       fetchCartData.fulfilled,
       (state, action: PayloadAction<CartState>) => {
         // state.items = action.payload.items;
         state.items = action.payload.items;
         state.totalQuantity = action.payload.totalQuantity;
-        state.loading = false;
-        state.error = false;
+        // state.loading = false;
+        // state.error = false;
       }
     );
-    builder.addCase(fetchCartData.rejected, (state, action) => {
-      state.loading = false;
-      state.error = true;
-      // throw new Error('Fetching cart data failed!(extraReducer)');
-    });
+    // builder.addCase(fetchCartData.rejected, (state, action) => {
+    //   // state.loading = false;
+    //   // state.error = true;
+    //   // throw new Error('Fetching cart data failed!(extraReducer)');
+    // });
   },
 });
 

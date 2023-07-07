@@ -1,11 +1,8 @@
-import {
-  useAppDispatch,
-  useAppSelector,
-} from '../../../hooks/useTypedSelector';
+import { useAppDispatch } from '../../../hooks/useTypedSelector';
 
-import styles from './styles.module.css';
 import { cartActions } from '../../../store/slices/cart.store';
-import { sendCartData } from '../../../store/slices/cart.store/actions';
+import { uiActions } from '../../../store/slices/ui.store';
+import styles from './styles.module.css';
 interface CartItemProps {
   item: {
     id: string;
@@ -18,16 +15,15 @@ interface CartItemProps {
 
 const CartItem = ({ item }: CartItemProps) => {
   const dispatch = useAppDispatch();
-  const cart = useAppSelector(state => state.cart);
   const { title, quantity, total, price, id } = item;
 
   const handleRemoveItem = () => {
     dispatch(cartActions.removeItemFromCart(id));
+    dispatch(uiActions.setCartUpdated(true));
   };
   const handleAddItem = async () => {
     dispatch(cartActions.addItemToCart({ id, title, price }));
-    const { loading, error, ...others } = cart;
-    await dispatch(sendCartData(others));
+    dispatch(uiActions.setCartUpdated(true));
   };
 
   return (

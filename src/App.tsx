@@ -10,8 +10,9 @@ import { RootState } from './libs/types';
 
 import Notification from './components/UI/Notification';
 import { useAppDispatch, useAppSelector } from './hooks/useTypedSelector';
-import { cartActions } from './store/slices/cart.store';
-import { fetchCartData } from './store/slices/cart.store/actions';
+// import { cartActions } from './store/slices/cart.store';
+import { fetchCartData, sendCartData } from './store/slices/cart.store/actions';
+import { uiActions } from './store/slices/ui.store';
 
 // let isInitial = true;
 
@@ -20,18 +21,35 @@ function App() {
   const showCart = useSelector((state: RootState) => state.ui.cartIsVisible);
   // const cart = useSelector((state: RootState) => state.cart);
   const cart = useAppSelector(state => state.cart);
+  const cartUpdated = useAppSelector(state => state.ui.isCartUpdated);
 
   const notification = useSelector((state: RootState) => state.ui.notification);
 
+  // dispatch(cartActions.replaceCart(cart));
+
+  // TO GET THE INITIAL DATA FROM BACKEND
+
   useEffect(() => {
-    const getDataFromDB = async () => {
-      const data = await dispatch(fetchCartData());
-      console.log('useEffectData', data.payload);
-      return data.payload;
+    const initialDispatch = async () => {
+      await dispatch(fetchCartData());
     };
-    const dataFromDB = getDataFromDB();
-    dispatch(cartActions.replaceCart(dataFromDB));
+
+    initialDispatch();
+
+    // Return a cleanup function that does nothing
+    return () => {
+      // this function is intentionally left empty.
+    };
   }, [dispatch]);
+
+  // TO UPDATE BACKEND
+
+  useEffect(() => {
+    if (cartUpdated) {
+      dispatch(sendCartData(cart));
+      dispatch(uiActions.setCartUpdated(false));
+    }
+  }, [cart, cartUpdated, dispatch]);
 
   // useEffect(() => {
   //   if (isInitial) {
@@ -39,12 +57,13 @@ function App() {
   //     return;
   //   }
   //   const dispatchData = async () => {
-  //     await dispatch(sendCartData(cart));
+  //     // await dispatch(sendCartData(cart));
   //   };
+
   //   dispatchData();
   // }, [cart, dispatch]);
 
-  console.log('cart', cart);
+  console.log('cartState(App)', cart);
   console.log('notification', notification);
 
   return (
