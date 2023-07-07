@@ -2,23 +2,26 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { CartState } from '../../../libs/types';
 
-export const fetchCartData = createAsyncThunk('cart/fetch', async () => {
-  const response = await fetch('http://localhost:5000/cart/', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  const data = await response.json();
-  console.log('<<<data from BE via thunk', data);
-  return data;
-});
+export const fetchCartData = createAsyncThunk(
+  'cart/getFromBackend',
+  async () => {
+    const response = await fetch('http://localhost:5000/cart/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    console.log('<<<data from BE via thunk', data);
+    return data;
+  }
+);
 
 export const sendCartData = createAsyncThunk(
-  'cart/send',
+  'cart/sendToBackend',
   async (cart: CartState, thunkAPI) => {
     try {
-      const response = await fetch('http://localhost:5000/cart/', {
+      const response = await fetch('http://localhost:5000/car/', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

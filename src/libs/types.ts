@@ -15,6 +15,8 @@ export interface CartState {
     totalPrice: number;
   }[];
   totalQuantity: number;
+  loading: boolean;
+  error: boolean;
 }
 export interface RootState {
   ui: uiState;
