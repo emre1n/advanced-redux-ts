@@ -10,22 +10,16 @@ import { RootState } from './libs/types';
 
 import Notification from './components/UI/Notification';
 import { useAppDispatch, useAppSelector } from './hooks/useTypedSelector';
-// import { cartActions } from './store/slices/cart.store';
 import { fetchCartData, sendCartData } from './store/slices/cart.store/actions';
 import { uiActions } from './store/slices/ui.store';
-
-// let isInitial = true;
 
 function App() {
   const dispatch = useAppDispatch();
   const showCart = useSelector((state: RootState) => state.ui.cartIsVisible);
-  // const cart = useSelector((state: RootState) => state.cart);
   const cart = useAppSelector(state => state.cart);
   const cartUpdated = useAppSelector(state => state.ui.isCartUpdated);
 
   const notification = useSelector((state: RootState) => state.ui.notification);
-
-  // dispatch(cartActions.replaceCart(cart));
 
   // TO GET THE INITIAL DATA FROM BACKEND
 
@@ -94,18 +88,6 @@ function App() {
       }
     }
   }, [cart, cartUpdated, dispatch]);
-
-  // useEffect(() => {
-  //   if (isInitial) {
-  //     isInitial = false;
-  //     return;
-  //   }
-  //   const dispatchData = async () => {
-  //     // await dispatch(sendCartData(cart));
-  //   };
-
-  //   dispatchData();
-  // }, [cart, dispatch]);
 
   console.log('cartState(App)', cart);
   console.log('notification', notification);
